@@ -1,0 +1,19 @@
+{
+  "name": "ExpressApp5",
+  "version": "0.0.0",
+  "description": "ExpressApp5",
+  "main": "app.js",
+  "author": {
+    "name": "Home",
+    "email": ""
+  },
+  "dependencies": {
+    "async": "^1.5.0",
+    "documentdb": "^1.4.0",
+    "express": "3.4.4",
+    "jade": "*",
+    "nconf": "^0.8.2",
+    "nodemailer": "^1.10.0",
+    "stylus": "*"
+  }
+}

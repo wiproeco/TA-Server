@@ -1,0 +1,9 @@
+{
+    "HOST"       : "https://wiprotalentacquisition.documents.azure.com:443/",
+    "AUTH_KEY"   : "LSSrCRoSoqRt/oCzcbm2y2yllHiThEC0pju8yH3QgJqE8gNbf6FUHK85/E3luwnz0A4cHN6C08QBqH5y4VdA6Q==",
+    "DATABASE"   : "talentacquisition",
+    "COLLECTION" : "registrationdetails",
+    "COLLECTION_Questions" : "questions",
+    "COLLECTION_Results" : "TestResult",
+    "COLLECTION_Schedule" : "TASchedule"
+}
