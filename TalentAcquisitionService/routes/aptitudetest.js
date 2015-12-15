@@ -150,7 +150,7 @@ exports.GetTestSlot = function (req, res) {
     var candidateID = req.query.candidateid;    
         
     var querySpec = {
-        query: 'SELECT root.testDate as testdate, root.testTime as testtime FROM root where root.id = "' + candidateID + '"'
+        query: 'SELECT root.employeeType as employeetype, root.testDate as testdate, root.testTime as testtime FROM root where root.id = "' + candidateID + '"'
     };
     var db = "dbs/" + databaseId + "/colls/" + collectionId_Registration;
 
