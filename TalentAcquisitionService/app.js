@@ -53,6 +53,7 @@ app.post('/SendEmail',routes.SendEmail);
 app.get('/aptitudetest',aptitudeTest.GetQuestions);
 app.post('/aptitudetestsubmit',aptitudeTest.SubmitTest);
 app.post('/sendemail',aptitudeTest.SendEmail);
+app.get('/aptitudetestslot',aptitudeTest.GetTestSlot);
 app.get('/getcandidates',interviewScheduler.GetCandidates);
 app.post('/schedulersubmit',interviewScheduler.Submit);
 app.post('/Sendmail',interviewScheduler.SendEmail);
