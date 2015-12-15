@@ -111,6 +111,7 @@ exports.SubmitTest = function (req, res) {
             console.log(err);
         } else {
             doc.score = req.body.score;
+            doc.isPassed = req.body.isPassed;
 
             client.replaceDocument(doc._self, doc, function (err, replaced) {
                 if (err) {
@@ -149,7 +150,7 @@ exports.GetTestSlot = function (req, res) {
     var candidateID = req.query.candidateid;    
         
     var querySpec = {
-        query: 'SELECT root.RegisteredDate as testslot FROM root where root.id = "' + candidateID + '"'
+        query: 'SELECT root.testDate as testdate, root.testTime as testtime FROM root where root.id = "' + candidateID + '"'
     };
     var db = "dbs/" + databaseId + "/colls/" + collectionId_Registration;
 
