@@ -48,6 +48,7 @@ var docDbClient = new DocumentDBClient(config.host, {
 app.post('/registerCandidate', routes.registerCandidate);
 app.get('/search',Search.Search);
 app.get('/ShowEmployees',routes.ShowEmployees); 
+app.post('/panelsubmit',routes.PanelSubmit); 
 app.post('/SendEmail',routes.SendEmail); 
 app.get('/aptitudetest',aptitudeTest.GetQuestions);
 app.post('/aptitudetestsubmit',aptitudeTest.SubmitTest);
@@ -55,7 +56,8 @@ app.post('/sendemail',aptitudeTest.SendEmail);
 app.get('/aptitudetestslot',aptitudeTest.GetTestSlot);
 app.get('/getcandidates',interviewScheduler.GetCandidates);
 app.post('/schedulersubmit',interviewScheduler.Submit);
-app.post('/sendmail',interviewScheduler.SendEmail);
+app.post('/Sendmail',interviewScheduler.SendEmail);
+
 // development only
 if ('development' == app.get('env')) {
     app.use(express.errorHandler());
