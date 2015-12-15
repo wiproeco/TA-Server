@@ -35,10 +35,13 @@ exports.registerCandidate = function (req, res, callback) {
 exports.ShowEmployees = function (req, res) {
         
         var querySpec = {
-            query: 'SELECT * FROM root r WHERE r.completed=@completed',
+            query: 'SELECT * FROM root r WHERE r.completed=@completed and r.employeeType=@type',
             parameters: [{
                 name: '@completed',
                 value: false
+            }, {
+                name: '@type',
+                value: 'Employee'
             }]
         };        
      

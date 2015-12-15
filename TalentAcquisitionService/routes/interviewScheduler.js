@@ -18,16 +18,13 @@ var client = new DocumentDBClient(host, { masterKey: authKey });
 
 exports.GetCandidates = function (req, res) {
     
-    /* var querySpec = {
-            query: 'SELECT * FROM root r WHERE r.type=@type',
+     var querySpec = {
+            query: 'SELECT * FROM root r WHERE r.employeeType=@type',
             parameters: [{
                 name: '@type',
-                value: 'C'
+                value: 'Candidate'
             }]
-        };*/       
-    var querySpec = {
-        query: 'SELECT * FROM root'
-    };
+    };       
     var db = "dbs/" + databaseId + "/colls/" + collection_Candidates;
 
     client.queryDocuments(db, querySpec).toArray(function (err, results) {
