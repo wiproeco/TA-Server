@@ -4,6 +4,5 @@
     "DATABASE"   : "talentacquisition",
     "COLLECTION" : "registrationdetails",
     "COLLECTION_Questions" : "questions",
-    "COLLECTION_Results" : "TestResult",
     "COLLECTION_Schedule" : "TASchedule"
 }
