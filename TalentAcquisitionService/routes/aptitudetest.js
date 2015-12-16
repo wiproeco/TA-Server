@@ -47,8 +47,8 @@ var client = new DocumentDBClient(host, { masterKey: authKey });
 var smtpTransport = nodemailer.createTransport("SMTP",{
    service: "Gmail",
    auth: {
-       user: "shital.kad@gmail.com",
-       pass: ""
+       user: "wiprocarpool@gmail.com",
+       pass: "wipro@2015"
    }
 });
 
@@ -150,7 +150,11 @@ exports.GetTestSlot = function (req, res) {
     var candidateID = req.query.candidateid;    
         
     var querySpec = {
-        query: 'SELECT root.testDate as testdate, root.testTime as testtime FROM root where root.id = "' + candidateID + '"'
+        query: 'SELECT * FROM root where root.id = @id',
+        parameters: [{
+            name: '@id',
+            value: candidateID
+        }]
     };
     var db = "dbs/" + databaseId + "/colls/" + collectionId_Registration;
 

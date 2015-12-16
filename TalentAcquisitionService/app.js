@@ -12,6 +12,8 @@ var http = require('http');
 var path = require('path');
 var aptitudeTest = require('./routes/aptitudetest');
 var interviewScheduler=require('./routes/interviewScheduler');
+var Login=require('./routes/login');
+
 
 var app = express();
 
@@ -19,7 +21,7 @@ var bodyParser = require('body-parser')
  
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-  extended: true
+  extended: false
 }));
 app.all('*', function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -45,17 +47,24 @@ var docDbClient = new DocumentDBClient(config.host, {
     masterKey: config.authKey
 });
 
-app.post('/registerCandidate', routes.registerCandidate);
-app.get('/search',Search.Search);
-app.get('/ShowEmployees',routes.ShowEmployees); 
-app.post('/SendEmail',routes.SendEmail); 
 app.get('/aptitudetest',aptitudeTest.GetQuestions);
 app.post('/aptitudetestsubmit',aptitudeTest.SubmitTest);
-app.post('/sendemail',aptitudeTest.SendEmail);
+app.post('/sendscoreemail',aptitudeTest.SendEmail);
 app.get('/aptitudetestslot',aptitudeTest.GetTestSlot);
+app.post('/registerCandidate', routes.registerCandidate);
+app.get('/search',Search.Search);
+app.get('/login', Login.Login);
+app.get('/ShowEmployees',routes.ShowEmployees); 
+app.post('/panelsubmit',routes.PanelSubmit);  
+app.post('/SendEmail',routes.SendEmail); 
 app.get('/getcandidates',interviewScheduler.GetCandidates);
 app.post('/schedulersubmit',interviewScheduler.Submit);
-app.post('/sendmail',interviewScheduler.SendEmail);
+app.post('/SendEmailFromScheduler',routes.SendEmailFromScheduler);
+app.post('/updateCandidate',routes.updateCandidate);
+app.get('/getUserDetails',routes.getUserDetails);
+app.get('/GetEmployeeInterviewDates',interviewScheduler.GetEmployeeInterviewDates);
+app.post('/EmployeeConfirm',interviewScheduler.EmployeeConfirm);
+
 // development only
 if ('development' == app.get('env')) {
     app.use(express.errorHandler());

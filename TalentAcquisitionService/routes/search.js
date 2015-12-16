@@ -29,7 +29,8 @@ function stringToDate(_date,_format,_delimiter)
 // import the modules we will use
 var DocumentDBClient = require('documentdb').DocumentClient;
 var nconf = require('nconf');
-
+var moment = require('moment');
+moment().format();
 
 // tell nconf which config file to use
 nconf.env();
@@ -39,7 +40,9 @@ var host = nconf.get("HOST");
 var authKey = nconf.get("AUTH_KEY");
 var databaseId = nconf.get("DATABASE");
 var collectionId = nconf.get("COLLECTION");
-var skills="";
+
+
+
 
 // create some global variables which we will use later to hold instances of the DocumentDBClient, Database and Collection
 
@@ -48,12 +51,19 @@ var client = new DocumentDBClient(host, { masterKey: authKey });
 
 
 exports.Search=function(req,res){
+    var skillsquery="contains";
+var skills="";
+var namequery="contains";
    var url = require('url') ;
    var queryObject = url.parse(req.url,true).query;
 if(queryObject.name==undefined)
 {
-    queryObject.name="";
+   queryObject.name="";
+    namequery="''=''";
+}else{
+    namequery=namequery+"(r.fullName,'"+queryObject.name+"')";
 }
+
 if(queryObject.qualification==undefined)
 {
     queryObject.qualification="";
@@ -79,34 +89,67 @@ if(queryObject.currentlyworking==undefined)
 {
     queryObject.currentlyworking="";
 }
+if(queryObject.fromdate==undefined || queryObject.fromdate=="")
+{
+    queryObject.fromdate="";
+}
+else
+{
+    queryObject.fromdate=moment(queryObject.fromdate,"M/D/YYYY H:mm").valueOf()
+}
+
+if(queryObject.todate==undefined || queryObject.todate=="")
+{
+    queryObject.todate="";
+}
+else
+{
+    //moment().add(1, 'days').valueOf();
+   // queryObject.todate=moment(queryObject.todate,"M/D/YYYY H:mm").valueOf()
+   queryObject.todate=moment(queryObject.todate,"M/D/YYYY H:mm").add(1, 'days').valueOf()
+
+
+
+
+}
+
+
+
+// if(skills.length>0)
+// {
+// var skillResult=skills.split(',');
+//    skills="";
+//  for (var i = 0; i < skillResult.length; i++) {
+//      skills = skills+"\""+ skillResult[i].toString() +"\",";
+//  }
+//  skills = skills.substring(0,skills.length-1);
+// }
+// var skillsquery="";
+// if(skills!="")
+// {
+//     skillsquery ="r.skillSet in ("+skills+")";
+// }
+// else{
+//     skillsquery="''=''"
+// }
 
 if(skills.length>0)
 {
 var skillResult=skills.split(',');
-   skills="";
- for (var i = 0; i < skillResult.length; i++) {
-     skills = skills+"\""+ skillResult[i].toString() +"\",";
- }
- skills = skills.substring(0,skills.length-1);
+for (var i = 0; i < skillResult.length; i++) {
+     skillsquery=skillsquery+" (r.skillSet,'"+skillResult[i]+"')"+" OR contains";
 }
-var skillsquery="";
-if(skills!="")
-{
-    skillsquery ="r.skillSet in ("+skills+")";
-}
-else{
+skillsquery = skillsquery.substr(0,skillsquery.length-12);
+}else{
     skillsquery="''=''"
 }
 
 
+
        var querySpec = {
-           //query: 'Select * from root r where ('+skillsquery+ ')', 
-    query: 'Select * from root r where((@qualification="" or r.qualification=@qualification) AND (@name="" or r.firstName=@name) AND (@telephone="" or r.telephone=@telephone) AND (@currentlyworking="" or r.currentEmployer=@currentlyworking) AND (r.experience>=@exp) AND ('+skillsquery+ ') )',    
-              
-// query: 'Select * from root r where((@qualification="" or r.qualification=@qualification) AND (@name="" or r.firstName=@name) AND (@telephone="" or r.telephone=@telephone) AND (@ratingininterview="" or r.Rating=@ratingininterview) AND (@currentlyworking="" or r.CurrentlyWorking=@currentlyworking) AND (r.Experience>=@exp) AND ('+skillsquery+ ') )',    
- 
-       
-       // query: 'Select * from root r where(@qualification="" or r.Qualification=@qualification) AND (r.Name=@name or @name="") AND(@skillset="" or r.SkillSet=@skillset) AND (@telephone="" or r.Telephone=@telephone) AND (@ratingininterview="" or r.Rating=@ratingininterview) AND //(@currentlyworking="" or r.Rating=@currentlyworking) AND (r.Experience>=@exp) AND ( stringToDate("12-08-2015","mm-dd-yyyy","-") between stringToDate("12-01-2015","mm-dd-yyyy","-") AND stringToDate("12-31-2015","mm-dd-yyyy","-"))',
+         // query: 'Select * from root r where '+namequery+' and ('+skillsquery+ ')', 
+          query: 'Select * from root r where '+namequery+' and ((r.registeredDate between @fromdate and @todate) and (@qualification="" or r.qualification=@qualification) AND (@telephone="" or r.telephone=@telephone)  AND (r.experience>=@exp)  AND (@currentlyworking="" or r.currentEmployer=@currentlyworking) AND ('+skillsquery+ ') )',
+
         parameters:[{
             name:'@name',
             value:queryObject.name
@@ -131,6 +174,15 @@ else{
             name:'@currentlyworking',
             value:queryObject.currentlyworking
         },
+        {
+            name:'@fromdate',
+            value:queryObject.fromdate
+        },
+        {
+            name:'@todate',
+            value:queryObject.todate
+        },
+
         {
             name:'@exp',
             value:parseFloat(queryObject.exp)
