@@ -90,29 +90,9 @@ exports.GetCandidate = function (itemId, callback) {
     });
 };
 
-exports.SendEmail= function (req, res) {
-
-   var emailJson=req.body
-   var transporter = nodemailer.createTransport();    
-   transporter.sendMail({
-   template: 'email', 
-   from:emailJson.from,
-   to:emailJson.to,
-   subject:emailJson.subject,
-   html:emailJson.text,
-   generateTextFromHTML:true 
-}, function(error, response){
-   if(error){
-       console.log(error);
-   }else{
-       console.log("Message sent: " + response.message);
-   }
-});
-    transporter.close();
-};
 exports.GetEmployeeInterviewDates= function (req, res) {
      var querySpec = {
-            query: 'SELECT f.id , c.id as employeeid,c.date,c.time FROM root f JOIN c IN f.interviewerDetails WHERE c.id=@loginid',
+            query: 'SELECT f.id,c.name,c.emailID,c.id as employeeid,c.date,c.time FROM root f JOIN c IN f.interviewerDetails WHERE c.id=@loginid AND c.confirm=""',
             parameters: [{
                 name: '@loginid',
                 value: req.query.loginid

@@ -181,29 +181,8 @@ exports.GetItem = function (itemId, callback) {
         }
     });
 };    
-/* exports.SendEmail= function (req, res) {
-
-   var emailJson=req.body
-   var transporter = nodemailer.createTransport();    
-   transporter.sendMail({
-   template: 'email', 
-   from:emailJson.from,
-   to:emailJson.to,
-   subject:emailJson.subject,
-   html:emailJson.text,
-   generateTextFromHTML:true 
-}, function(error, response){
-   if(error){
-       console.log(error);
-   }else{
-       console.log("Message sent: " + response.message);
-   }
-});
-    transporter.close();
-} */
 
 var ical = require('ical-generator');
-
 var smtpTransport = nodemailer.createTransport("SMTP",{
     service: 'gmail',
     auth: {
@@ -215,7 +194,6 @@ var smtpTransport = nodemailer.createTransport("SMTP",{
 
 exports.SendEmail= function (req, res) {
 var emailJson= req.body    
-//var emailJson= {from : "ramsatish.net@gmail.com",to : "v-ramsaj@microsoft.com",subject : "Meeting",text:"testmail",startdate:new Date(),endDate:new Date()}//req.body
 var eventObj = {
                 'start' : emailJson.startDate,
                 'end' :emailJson.endDate,
@@ -284,4 +262,4 @@ exports.SendEmailFromScheduler= function (req, res) {
    }
 });
     transporter.close();
-}
+};
