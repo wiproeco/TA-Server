@@ -181,6 +181,26 @@ exports.GetItem = function (itemId, callback) {
         }
     });
 };    
+/* exports.SendEmail= function (req, res) {
+
+   var emailJson=req.body
+   var transporter = nodemailer.createTransport();    
+   transporter.sendMail({
+   template: 'email', 
+   from:emailJson.from,
+   to:emailJson.to,
+   subject:emailJson.subject,
+   html:emailJson.text,
+   generateTextFromHTML:true 
+}, function(error, response){
+   if(error){
+       console.log(error);
+   }else{
+       console.log("Message sent: " + response.message);
+   }
+});
+    transporter.close();
+} */
 
 var ical = require('ical-generator');
 
@@ -245,9 +265,6 @@ cal.saveSync(path);
     transporter.close();
     
 };
-
-
-
 exports.SendEmailFromScheduler= function (req, res) {
 
    var emailJson=req.body

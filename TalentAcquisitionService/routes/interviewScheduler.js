@@ -161,7 +161,7 @@ exports.GetDetails = function (empId,interviewDate,interviewTime, callback) {
     var db = "dbs/" + databaseId + "/colls/" + collection_Candidates;
 
     var querySpec = {
-        query: 'SELECT f.id , c.id as employeeid,c.date,c.time FROM root f JOIN c IN f.interviewerDetails WHERE c.id=@loginid And c.date=@interviewDate And c.time=@interviewTime',
+        query: 'SELECT f.id , c.id as employeeid,c.date,c.time FROM root f JOIN c IN f.interviewerDetails WHERE c.id=@id And c.date=@interviewDate And c.time=@interviewTime',
         parameters: [{
             name: '@id',
             value: empId

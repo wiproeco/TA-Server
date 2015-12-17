@@ -150,6 +150,7 @@ exports.GetTestSlot = function (req, res) {
     var candidateID = req.query.candidateid;    
         
     var querySpec = {
+
         query: 'SELECT * FROM root where root.id = @id',
         parameters: [{
             name: '@id',
