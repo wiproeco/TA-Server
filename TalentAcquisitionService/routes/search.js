@@ -56,6 +56,11 @@ var skills="";
 var namequery="contains";
    var url = require('url') ;
    var queryObject = url.parse(req.url,true).query;
+if(queryObject.email==undefined)
+{
+    queryObject.email="";
+}
+
 if(queryObject.name==undefined)
 {
    queryObject.name="";
@@ -147,8 +152,8 @@ skillsquery = skillsquery.substr(0,skillsquery.length-12);
 
 
        var querySpec = {
-         // query: 'Select * from root r where '+namequery+' and ('+skillsquery+ ')', 
-          query: 'Select * from root r where '+namequery+' and ((r.registeredDate between @fromdate and @todate) and (@qualification="" or r.qualification=@qualification) AND (@telephone="" or r.telephone=@telephone)  AND (r.experience>=@exp)  AND (@currentlyworking="" or r.currentEmployer=@currentlyworking) AND ('+skillsquery+ ') )',
+           query: 'Select * from root r where '+namequery+' and ((r.registeredDate between @fromdate and @todate) and (@qualification="" or r.qualification=@qualification) and (@email="" or r.email=@email) AND (@telephone="" or r.telephone=@telephone)  AND (r.experience>=@exp) AND(@currentlyworking="" or r.currentEmployer=@currentlyworking) AND ('+skillsquery+ ') AND r.employeeType = "Candidate" )',
+
 
         parameters:[{
             name:'@name',
@@ -182,7 +187,10 @@ skillsquery = skillsquery.substr(0,skillsquery.length-12);
             name:'@todate',
             value:queryObject.todate
         },
-
+        {
+            name:'@email',
+            value:queryObject.email
+        },
         {
             name:'@exp',
             value:parseFloat(queryObject.exp)
