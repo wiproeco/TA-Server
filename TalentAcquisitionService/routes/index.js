@@ -263,3 +263,80 @@ exports.SendEmailFromScheduler= function (req, res) {
 });
     transporter.close();
 };
+
+exports.SubmitTechnicalFeedback = function (req, res) {
+
+    var candidateId = req.body.candidateID;
+    
+    exports.GetCandidate(candidateId, function (err, doc) {
+        if (err) {
+            console.log(err);
+        } else {
+            
+            doc.technicalRating = req.body.technicalRating;
+            doc.remarks = req.body.remarks; 
+            
+            if (doc.aptitudeScore == undefined)
+            {
+                doc.overallRating = doc.technicalRating;
+            }
+            else
+            {
+                if(doc.technicalRating == "Poor" || doc.aptitudeScore<=20)
+                {
+                    doc.overallRating = "Poor";
+                }
+                else if(doc.technicalRating=="Excellent" && doc.aptitudeScore>=90)
+                {
+                    doc.overallRating = "Excellent";
+                }
+                else if(doc.technicalRating=="Average" && doc.aptitudeScore>=90)
+                {
+                    doc.overallRating = "Excellent";
+                }
+                else if(doc.technicalRating=="Average" && doc.aptitudeScore>=50)
+                {
+                    doc.overallRating = "Average";
+                }
+                else if(doc.technicalRating=="Good" && doc.aptitudeScore>=50)
+                {
+                    doc.overallRating = "Good";
+                }
+                else
+                {
+                    doc.overallRating = "Poor";
+                }
+            }
+
+            client.replaceDocument(doc._self, doc, function (err, replaced) {
+                if (err) {
+                    console.log(err);
+
+                } else {
+                    res.json(replaced);
+                }
+            });
+        }
+    });
+};
+
+exports.GetCandidate = function (itemId, callback) {
+    var db = "dbs/" + databaseId + "/colls/" + collectionId;
+
+    var querySpec = {
+        query: 'SELECT * FROM root r WHERE r.id=@id',
+        parameters: [{
+            name: '@id',
+            value: itemId
+        }]
+    };
+
+    client.queryDocuments(db, querySpec).toArray(function (err, results) {
+        if (err) {
+            callback(err);
+
+        } else {
+            callback(null, results[0]);
+        }
+    });
+};

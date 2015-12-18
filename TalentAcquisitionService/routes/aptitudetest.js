@@ -110,7 +110,7 @@ exports.SubmitTest = function (req, res) {
         if (err) {
             console.log(err);
         } else {
-            doc.score = req.body.score;
+            doc.aptitudeScore = req.body.score;
             doc.isPassed = req.body.isPassed;
 
             client.replaceDocument(doc._self, doc, function (err, replaced) {

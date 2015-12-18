@@ -64,6 +64,7 @@ app.post('/updateCandidate',routes.updateCandidate);
 app.get('/getUserDetails',routes.getUserDetails);
 app.get('/GetEmployeeInterviewDates',interviewScheduler.GetEmployeeInterviewDates);
 app.post('/EmployeeConfirm',interviewScheduler.EmployeeConfirm);
+app.post('/submittechnicalfeedback',routes.SubmitTechnicalFeedback);
 
 // development only
 if ('development' == app.get('env')) {
