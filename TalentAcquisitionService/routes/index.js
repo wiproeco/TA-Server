@@ -136,27 +136,35 @@ exports.ShowEmployees = function (req, res) {
 
 exports.PanelSubmit = function (req, res) {
 
-    var itemId = req.body.candidateID;
-    
-    exports.GetItem(itemId, function (err, doc) {
-        if (err) {
-            //callback(err);
-            console.log(err);
-
-        } else {
-                
-            doc.interviewerDetails = req.body.interviewerDetails;
-            
-            client.replaceDocument(doc._self, doc, function (err, replaced) {
-                if (err) {
-                    console.log(err);
-
-                } else {
-                    res.json(replaced);
-                }
-            });
+ //   var itemId = req.body.candidateID;
+     var db = "dbs/" + databaseId + "/colls/" + collectionId;
+    client.createDocument(db, req.body, function (error, doc) {
+        if (error) {
+            console.log('Error occured while registering candidate: ', error);
+            throw error;
         }
+         res.end('success');
+        console.log('Registration details', doc);
     });
+//     exports.GetItem(itemId, function (err, doc) {
+//         if (err) {
+//             //callback(err);
+//             console.log(err);
+// 
+//         } else {
+//                 
+//             doc.interviewerDetails = req.body.interviewerDetails;
+//             
+//             client.replaceDocument(doc._self, doc, function (err, replaced) {
+//                 if (err) {
+//                     console.log(err);
+// 
+//                 } else {
+//                     res.json(replaced);
+//                 }
+//             });
+//         }
+//     });
 };
 
 

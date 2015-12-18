@@ -92,7 +92,7 @@ exports.GetCandidate = function (itemId, callback) {
 
 exports.GetEmployeeInterviewDates= function (req, res) {
      var querySpec = {
-            query: 'SELECT f.id,c.name,c.emailID,c.id as employeeid,c.date,c.time FROM root f JOIN c IN f.interviewerDetails WHERE c.id=@loginid AND c.confirm=""',
+            query: 'SELECT f.candidateID as id,c.name,c.emailID,c.empid as employeeid,c.date,c.time,f.interviewerdetails FROM root f JOIN c IN f.interviewerDetails WHERE c.empid=@loginid AND c.confirm=""',
             parameters: [{
                 name: '@loginid',
                 value: req.query.loginid
@@ -122,7 +122,10 @@ exports.EmployeeConfirm = function (req, res) {
 
         } else {
                 
-            doc.status = req.body.status;
+            if(doc.interviewerDetails[0].empid==req.body.employeeID)
+              {  
+                    doc.interviewerDetails[0].confirm = req.body.status;
+              }
             
             client.replaceDocument(doc._self, doc, function (err, replaced) {
                 if (err) {
@@ -141,7 +144,7 @@ exports.GetDetails = function (empId,interviewDate,interviewTime, callback) {
     var db = "dbs/" + databaseId + "/colls/" + collection_Candidates;
 
     var querySpec = {
-        query: 'SELECT f.id , c.id as employeeid,c.date,c.time FROM root f JOIN c IN f.interviewerDetails WHERE c.id=@id And c.date=@interviewDate And c.time=@interviewTime',
+        query: 'SELECT f._self,f.id,f.candidateID,f.interviewerDetails FROM root f JOIN c IN f.interviewerDetails WHERE c.empid=@id And c.date=@interviewDate And c.time=@interviewTime',
         parameters: [{
             name: '@id',
             value: empId
